@@ -5,33 +5,32 @@ const submit = document.querySelector('#submit');
 const question = document.querySelector('.card-title');
 const answer = document.querySelector('.card-text');
 
-question.innerText = `Exercise: Write a recursive function called isPalindrome which returns true if the string passed to it is a palindrome (reads the same forward and backward). Otherwise it returns false.`;
+question.innerText = `Write a recursive function called capitalizeFirst. Given an array of strings, capitalize the first letter of each string in the array.`;
 
-//Input: string
-// OutPut: true or false
+function exercise() {
 
-
-
-function exercise(str) {
-    const reversed = [];
-
-    function helper(helperInput) {
-        if (helperInput.length === 0) {
-            return;
-        }
-        reversed.unshift(helperInput[0]);
-        helper(helperInput.slice(1));
-    }
-    helper(str);
-    return reversed.join("");
-    // for (let i = 0; i < str.length; i++) {
-    //     reversed.unshift(str[i])
-    // }
-    // return reversed.join("");
-    // return exercise(str.slice(1));
 }
 
 
+
+// function exercise(arrOfArrs) {
+//     let arr = [];
+//     for (let i = 0; i < arrOfArrs.length; i++) {
+//         if (Array.isArray(arrOfArrs[i])) {
+//             arr = arr.concat(exercise(arrOfArrs[i]))
+//         } else {
+//             arr.push(arrOfArrs[i])
+//         }
+//         return arr;
+//     }
+
+
+// function brandonsRoll(num) {
+//     for (let i = 0; i < num; i++) {
+//         const dice = Math.floor(Math.random() * 20) + 1;
+//         console.log(dice);
+//     }
+// }
 
 submit.addEventListener('click', (e) => {
     e.preventDefault();
@@ -370,5 +369,60 @@ function reverse(str) {
     return reversed.join("");
 }
 
-//Coding Exercise 15
+//Coding Exercise 16
 //Write a recursive function called isPalindrome which returns true if the string passed to it is a palindrome (reads the same forward and backward). Otherwise it returns false.
+
+function isPalindrome(str) {
+    let len = str.length;
+    let arr = [];
+    function helper(helperInput) {
+        if (helperInput.length === 0) {
+            return;
+        }
+        arr.push(helperInput[0]);
+        helper(helperInput.slice(1));
+    }
+    helper(str);
+
+    for (let i = 0; i <= arr.length; i++) {
+        if (arr[i] !== arr[len - 1 - i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+//Coding Exercise 17
+//Write a recursive function called someRecursive which accepts an array and a callback. The function returns true if a single value in the array returns true when passed to the callback. Otherwise it returns false.
+
+function someRecursive(arr, callback) {
+    if (arr.length === 0) {
+        return false;
+    }
+    if (callback(arr[0]) === true) {
+        return true;
+    }
+    return someRecursive(arr.slice(1), callback);
+}
+
+//Coding Exercise 18
+//Write a recursive function called flatten which accepts an array of arrays and returns a new array with all values flattened.
+
+function flatten(arrOfArrs) {
+    let arr = [];
+    for (let i = 0; i < arrOfArrs.length; i++) {
+        if (Array.isArray(arrOfArrs[i]) === false) {
+            arr.push(arrOfArrs[i]);
+        } else {
+            arr = arr.concat(flatten(arrOfArrs[i]));
+        }
+    }
+    return arr;
+}
+
+//Coding Exercise 19
+// Write a recursive function called capitalizeFirst. Given an array of strings, capitalize the first letter of each string in the array.
+
+function capitalizeFirst() {
+
+}
