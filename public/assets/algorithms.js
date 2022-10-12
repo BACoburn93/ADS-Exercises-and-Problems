@@ -5,35 +5,19 @@ const submit = document.querySelector('#submit');
 const question = document.querySelector('.card-title');
 const answer = document.querySelector('.card-text');
 
-question.innerText = `Exercise: `;
+question.innerText = `Exercise: Write a recursive function called nestedEvenSum. Return the sum of all even numbers in an object which may contain nested objects.`;
 
-// Input: 
-// Output: 
+//Input: an array of strings
+//Output: an array of strings
 
-
-function exercise(array, left = 0, right = array.length - 1) {
-    if (left < right) {
-        let swapIdx = pivot(array, left, right);
-        exercise(array, left, swapIdx - 1);
-        exercise(array, swapIdx + 1, right);
+function exercise(obj, num = 0) {
+    for (let key in obj) {
+        if (typeof obj[key] === 'object') num += exercise(obj[key]);
+        else if (typeof obj[key] === 'number' && obj[key] % 2 === 0) num += obj[key];
     }
-    function pivot(arr, start = 0, end = arr.length - 1) {
-        const swap = (array, idx1, idx2) => {
-            [array[idx1], array[idx2]] = [array[idx2], array[idx1]];
-        }
-        let piv = arr[start];
-        let swapIndex = start;
-        for (let i = start; i <= end; i++) {
-            if (piv > arr[i]) {
-                swapIndex++;
-                swap(arr, swapIndex, i);
-            }
-        }
-        swap(arr, start, swapIndex);
-        return swapIndex;
-    }
-    return array;
+    return num;
 }
+
 
 
 submit.addEventListener('click', (e) => {
@@ -41,24 +25,30 @@ submit.addEventListener('click', (e) => {
     answer.innerText = `Output: ${exercise(input1.value, input2.value)}`
 })
 
+
+
+
+
+
+
 //Exercise 1
 //Given two strings, write a function to determine if the second string is an anagram of the first. An anagram is a word, phrase, or name formed by rearranging the letters of another, such as cinema, formed from iceman.
 
+
 function isAnagram(str1, str2) {
-    str1 = str1.value
-    str2 = str2.value
     if (str1.length !== str2.length) {
         return false;
     }
+
     let frequency = {};
 
     for (let i = 0; i < str1.length; i++) {
-        let letter = str1[i]
+        let letter = str1[i];
         frequency[letter] ? frequency[letter] += 1 : frequency[letter] = 1;
     }
 
     for (let i = 0; i < str2.length; i++) {
-        let letter = str2[i]
+        let letter = str2[i];
         if (!frequency[letter]) {
             return false;
         } else {
@@ -68,9 +58,53 @@ function isAnagram(str1, str2) {
     return true;
 }
 
+function altIsAnagram(str1, str2) { //Slightly slower and more complex but still works
+    if (str1.length !== str2.length) {
+        return false;
+    }
+
+    string1 = str1.value;
+    string2 = str2.value;
+    let str1Letter;
+    let str2Letter;
+    let arr = [];
+    let freqCounter = {};
+
+    for (let i = 0; i < str1.length; i++) {
+        str1Letter = str1[i];
+        str2Letter = str2[i]
+        arr.push(str2Letter);
+        if (freqCounter[str1Letter] === undefined) {
+            freqCounter[str1Letter] = 1;
+        } else {
+            freqCounter[str1Letter] += 1;
+        }
+    }
+    for (let letter in freqCounter) {
+        for (let i = 0; i < arr.length; i++) {
+
+            if (arr[i] === letter) {
+                freqCounter[letter] -= 1;
+                arr.splice(i, 1);
+                if (arr[i] === letter) {
+                    i--;
+                }
+            }
+        }
+        if (freqCounter[letter] < 0) {
+            return false;
+        }
+    }
+    for (let key in freqCounter) {
+        if (freqCounter[key] !== 0) {
+            return false;
+        }
+    }
+    return true;
+}
+
 //Exercise 2
 //Implement a function called countUniqueValues, which accepts a sorted array, and counts the unique values in the array. There can be negative numbers in the array, but it will always be sorted.
-//MUST RUN IN CONSOLE
 
 function countUniqueProperties(arr) {
     if (arr.length === 0) {
@@ -84,6 +118,19 @@ function countUniqueProperties(arr) {
         }
     }
     return i + 1;
+}
+
+//An alternative that uses a frequencyCounter so the array doesn't need to be sorted
+function unsortedUniqueCounter(arr) {
+    let counter = {};
+    for (let i = 0; i < arr.length; i++) {
+        if (counter[arr[i]] === undefined) {
+            counter[arr[i]] = 1;
+        } else {
+            counter[arr[i]] += 1;
+        }
+    }
+    return Object.keys(counter).length;
 }
 
 //Exercise 3
@@ -110,6 +157,34 @@ function sameFrequency(x, y) {
         }
     }
     return true;
+}
+
+function altSameFrequency(number1, number2) {
+    let num1 = number1.toString()
+    let num2 = number2.toString()
+    let frequency1 = {}
+    let frequency2 = {}
+    if (number1 <= 0 && number2 <= 0 || num1.length !== num2.length) {
+        return false;
+    }
+    for (let i = 0; i < num1.length; i++) {
+        if (frequency1[num1[i]] === undefined) {
+            frequency1[num1[i]] = 1;
+        } else {
+            frequency1[num1[i]] += 1;
+        }
+        if (frequency2[num2[i]] === undefined) {
+            frequency2[num2[i]] = 1;
+        } else {
+            frequency2[num2[i]] += 1;
+        }
+    }
+    for (let key in frequency1) {
+        if (frequency1[key] !== frequency2[key]) {
+            return false;
+        }
+    }
+    return true
 }
 
 //Coding Exercise 4
@@ -141,6 +216,20 @@ function areThereDuplicates() {
     return false;
 }
 
+//Frequency Counter Are There Duplicates Function
+function areThereDuplicates() {
+    const frequency = {};
+    for (let i = 0; i < arguments.length; i++) {
+        if (frequency[arguments[i]] === undefined) {
+            frequency[arguments[i]] = 1
+        }
+        else {
+            return true;
+        }
+    }
+    return false;
+}
+
 //Coding Exercise 5
 //Write a function called averagePair. Given a sorted array of integers and a target average, determine if there is a pair of values in the array where the average of the pair equals the target average. There may be more than one pair that matches the average target.
 
@@ -152,11 +241,8 @@ function averagePair(arr, targAvg) {
     while (left < right) {
         while (left < right) {
             if ((arr[left] + arr[right]) / 2 === targAvg) {
-                // console.log(arr[left], arr[right]);
-                // console.log(targAvg);
                 return true;
             }
-            console.log(arr[left], arr[right]);
             left++;
         }
         if (arr.length > 1) {
@@ -165,7 +251,20 @@ function averagePair(arr, targAvg) {
             left = 0;
         }
     }
-    // console.log(targAvg);
+    return false;
+}
+
+//Worse O Notation, but is not limited to sorted arrays
+function unsortedAveragePair(arrOfNums, targetAvg) {
+    let pointer = 0;
+    for (let i = pointer; i < arrOfNums.length; i++) {
+        for (let j = pointer + 1; j < arrOfNums.length; j++) {
+            if ((arrOfNums[i] + arrOfNums[j]) / 2 === targetAvg) {
+                return true;
+            }
+        }
+        pointer++;
+    }
     return false;
 }
 
@@ -184,16 +283,33 @@ function isSubsequence(str1, str2) {
         if (str1[0] === str2[left]) {
             let newstr1 = str1.substring(1);
             let newstr2 = str2.substring(left + 1);
-            // console.log('before', str1[0], str2[left], str1, str2);
             str1 = newstr1;
             str2 = newstr2;
-            // console.log('after', str1[0], str2[left], str1, str2);
             if (newstr1.length === 0) {
                 return true;
             }
             left = -1;
         }
         left++;
+    }
+    return false;
+}
+
+function altIsSubsequent(str1, str2) {
+    if (str2.length < str1.length) {
+        return false;
+    }
+    let counter = 0;
+    let indexAt = 0;
+    for (let i = 0; i < str2.length; i++) {
+        if (str1[counter] === str2[i + indexAt + counter]) {
+            counter++;
+            indexAt = i;
+            i = -1;
+        }
+        if (counter === str1.length) {
+            return true;
+        }
     }
     return false;
 }
@@ -222,6 +338,26 @@ function maxSumSubarray(arr, num) {
     return maxSum;
 }
 
+function altMaxSumSubArray(arrOfInt, num) {
+    if (num > arrOfInt.length) {
+        return null;
+    }
+    let maxVal = 0;
+    let calcVal = 0;
+    let counter = 0;
+    while (counter < arrOfInt.length + 1) {
+        for (let i = counter; i < counter + num; i++) {
+            calcVal += arrOfInt[i];
+            if (calcVal > maxVal) {
+                maxVal = calcVal;
+            }
+        }
+        counter++;
+        calcVal = 0;
+    }
+    return maxVal;
+}
+
 //Coding Exercise 8
 // Write a function called minSubArrayLen which accepts two parameters - an array of positive integers and a positive integer.
 // This function should return the minimal length of a contiguous subarray of which the sum is greater than or equal to the integer passed to the function. If there isn't one, return 0 instead.
@@ -248,7 +384,6 @@ function minSubArrayLen(arr, num) {
             for (let value of tempSumArr) {
                 sum += value;
             }
-            console.log(sum);
             if (sum >= num) {
                 return tempSumArr.length;
             }
@@ -257,15 +392,35 @@ function minSubArrayLen(arr, num) {
     return 0;
 }
 
+function altMinSubArrayLen(arr, num) {
+    let minLen = Infinity;
+    let counter = 0;
+    let tempSum = 0;
+    let count = 0;
+    while (counter < arr.length) {
+        for (let i = counter; i < arr.length; i++) {
+            tempSum += arr[i];
+            count++;
+            if (tempSum >= num) {
+                if (count < minLen) {
+                    minLen = count;
+                }
+                counter++;
+                i = counter;
+                count = 0;
+                tempSum = 0;
+            }
+            if (count === arr.length) {
+                return 0;
+            }
+        }
+    }
+    return minLen;
+}
+
 //Coding Exercise 9
 // Write a function called findLongestSubstring, which accepts a string and returns the length of the longest substring with all distinct characters.
-// findLongestSubstring('') // 0
-// findLongestSubstring('rithmschool') // 7
-// findLongestSubstring('thisisawesome') // 6
-// findLongestSubstring('thecatinthehat') // 7
-// findLongestSubstring('bbbbbb') // 1
-// findLongestSubstring('longestsubstring') // 8
-// findLongestSubstring('thisishowwedoit') // 6
+
 
 // Required Constraints: Time - O(N)
 
@@ -294,6 +449,31 @@ function findLongestSubstring(str) {
     return maxSubStr;
 }
 
+function altLongestSubstring(str) {
+    let subStr = {}
+    let counter = 0;
+    let tempCount = 0;
+    let maxCount = 0;
+    for (let i = counter; i < str.length; i++) {
+        console.log(i, subStr);
+        if (!subStr[str[i]]) {
+            subStr[str[i]] = 1;
+            tempCount++;
+        } else {
+            counter++;
+            i = counter - 1;
+            tempCount = 0;
+            for (let key in subStr) {
+                delete subStr[key];
+            }
+        }
+        if (tempCount > maxCount) {
+            maxCount = tempCount;
+        }
+    }
+    return maxCount;
+}
+
 //Coding Exercise 10
 // Write a function called power, which accepts a base and an exponent. The function should return the power of the base to the exponent. This function should mimic the functionality of Math.pow()  - do not worry about negative bases and exponents.
 
@@ -308,13 +488,20 @@ function power(base, expo) {
 // Write a function factorial which accepts a number and returns the factorial of that number. A factorial is the product of an integer and all the integers below it; e.g., factorial four ( 4! ) is equal to 24, because 4 * 3 * 2 * 1 equals 24.  factorial zero (0!) is always 1.
 
 function factorial(num) {
-    if (x < 0) {
+    if (num < 0) {
         return 0;
     }
     if (num === 0) {
         return 1;
     }
     return num * factorial(num - 1);
+}
+
+//Included Negative Numbers
+function fullFactorial(num) {
+    if (num < 0) return num * fullFactorial(num + 1)
+    if (num === 0) return 1;
+    return num * fullFactorial(num - 1);
 }
 
 //Coding Exercise 12
@@ -337,14 +524,27 @@ function productOfArray(arr) {
     return value;
 }
 
+//ProductOfArray with no helper
+function noHelpProdOfArr(arr, temp = 1) {
+    temp *= arr[0]
+    arr.shift();
+    if (arr.length) return noHelpProdOfArr(arr, temp);
+    return temp;
+}
+
 //Coding Exercise 13
 // Write a function called recursiveRange which accepts a number and adds up all the numbers from 0 to the number passed to the function 
 
 function recursiveRange(num) {
-    if (num === 0) {
-        return 0;
-    }
+    if (num === 0) return 0;
     return num + recursiveRange(num - 1);
+}
+
+//Included Negative Numbers
+function fullRecursiveRange(num) {
+    if (num < 0) return num + fullRecursiveRange(num + 1)
+    if (num === 0) return 0;
+    return num + fullRecursiveRange(num - 1);
 }
 
 //Coding Exercise 14
@@ -376,6 +576,15 @@ function reverse(str) {
     return reversed.join("");
 }
 
+//Reverse function with no helper
+function noHelperReverse(str, arr = []) {
+    arr.unshift(str[0]);
+    let newStr = str.slice(1);
+    let reversed = arr.join('');
+    if (str.length > 1) return noHelperReverse(newStr, arr)
+    return reversed;
+}
+
 //Coding Exercise 16
 //Write a recursive function called isPalindrome which returns true if the string passed to it is a palindrome (reads the same forward and backward). Otherwise it returns false.
 
@@ -399,6 +608,17 @@ function isPalindrome(str) {
     return true;
 }
 
+function noHelpIsPalindrome(str) { //racecar
+    const start = 0;
+    const half = Math.floor(str.length / 2);
+    const end = str.length - 1;
+    if (str[start] === str[end] && str.length) {
+        return noHelpIsPalindrome(str.slice(start + 1, end));
+    }
+    if (str === str[half] || str.length === 0) return true;
+    else return false;
+}
+
 //Coding Exercise 17
 //Write a recursive function called someRecursive which accepts an array and a callback. The function returns true if a single value in the array returns true when passed to the callback. Otherwise it returns false.
 
@@ -411,6 +631,13 @@ function someRecursive(arr, callback) {
     }
     return someRecursive(arr.slice(1), callback);
 }
+
+function shortSomeRecursive(arr, callback) {
+    if (arr.length === 0) return false;
+    if (callback(arr[0]) === true) return true;
+    else return exercise(arr.slice(1), callback);
+}
+
 
 //Coding Exercise 18
 //Write a recursive function called flatten which accepts an array of arrays and returns a new array with all values flattened.
@@ -427,21 +654,42 @@ function flatten(arrOfArrs) {
     return arr;
 }
 
+function altFlatten(arrOfArrs) {
+    let arr = [];
+    let flatArr = arrOfArrs.concat.apply([], arrOfArrs);
+    for (let i = 0; i < arrOfArrs.length; i++) {
+        if (Array.isArray(arrOfArrs[i])) {
+            return altFlatten(flatArr);
+        } else {
+            arr.push(arrOfArrs[i]);
+        }
+    }
+    return arr;
+}
+
 //Coding Exercise 19
 // Write a recursive function called capitalizeFirst. Given an array of strings, capitalize the first letter of each string in the array.
 
 function capitalizeFirst() {
     let capArr = [];
     function helper(helperInput) {
-        if (helperInput.length === 0) {
-            return;
-        }
+        if (helperInput.length === 0) return;
         if (helperInput.length > 0) {
             capArr.push(helperInput[0].charAt(0).toUpperCase() + helperInput[0].slice(1));
             return helper(helperInput.splice(1));
         }
     }
     helper(arrOfStr);
+    return capArr;
+}
+
+//No He;per
+function noHelpCapitalizeFirst(arr, capArr = []) {
+    if (arr.length) {
+        let cappedStr = arr[0].charAt(0).toUpperCase() + arr[0].slice(1);
+        capArr.push(cappedStr);
+        return noHelpCapitalizeFirst(arr.slice(1), capArr);
+    }
     return capArr;
 }
 
@@ -463,6 +711,15 @@ function nestedEvenSum(objName) {
         }
     }
     helper(objName);
+    return num;
+}
+
+//No Helper
+function noHelpNestedEvenSums(obj, num = 0) {
+    for (let key in obj) {
+        if (typeof obj[key] === 'object') num += noHelpNestedEvenSums(obj[key]);
+        else if (typeof obj[key] === 'number' && obj[key] % 2 === 0) num += obj[key];
+    }
     return num;
 }
 
