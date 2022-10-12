@@ -1,3 +1,4 @@
+//Binary Search Tree and Tree Traversal
 
 class BstNode {
     constructor(value) {
@@ -61,23 +62,67 @@ class BinarySearchTree {
             }
         }
     }
+    bfs() {
+        let temp = this.root; //Create a variable to declare the shifted node
+        let queue = []; //Crete an array to act as a queue line for nodes
+        let visited = []; //Create an array to store queued node values
+        queue.push(temp); //Star by pushing the root into the queue
+        while (queue.length) { //While we have something in the queue
+            temp = queue.shift(); //Have temp equal the value of the first node to be shifted from queue
+            visited.push(temp.value); //Push the value of the shifed node to our returned array
+            if (temp.left) { //If there is a left value from our shifted node...
+                queue.push(temp.left); //Push the left value node into the queue
+            }
+            if (temp.right) { //If there is a right value from our shifted node...
+                queue.push(temp.right); //Push the right value node into the queue
+            }
+        }
+        return visited; //Return all of the values from the Binary Search Tree
+    }
+    dfsPreOrder() {
+        let current = this.root; //Create a variable for the root to call with our helper
+        let values = []; //Create an empty array to store our values into
+        let helper = (node) => { //Helper function
+            values.push(node.value); //Push the node value of the node input with the function into values array
+            if (node.left) helper(node.left); //If there is a node.left, call this function with that node
+            if (node.right) helper(node.right); //If there is a node.right, call this function with that node
+        }
+        helper(current); //Invoke our helper function
+        return values; //Return the array with our preordered values
+    }
+    dfsPostOrder() {
+        let current = this.root; //Create a variable for the root to call with our helper
+        let values = []; //Create an empty array to store our values into
+        let helper = (node) => { //Helper function
+            if (node.left) helper(node.left); //If there is a node.left, call this function with that node
+            if (node.right) helper(node.right); //If there is a node.right, call this function with that node
+            values.push(node.value); //Push the node value of the node input with the function into values array
+        }
+        helper(current); //Invoke our helper function
+        return values; //Return the array with our preordered values
+    }
+    dfsInOrder() {
+        let current = this.root; //Create a variable for the root to call with our helper
+        let values = []; //Create an empty array to store our values into
+        let helper = (node) => { //Helper function
+            if (node.left) helper(node.left); //If there is a node.left, call this function with that node
+            values.push(node.value); //Push the node value of the node input with the function into values array
+            if (node.right) helper(node.right); //If there is a node.right, call this function with that node
+        }
+        helper(current); //Invoke our helper function
+        return values; //Return the array with our preordered values
+    }
 }
+
 
 
 
 const tree = new BinarySearchTree();
 tree.root = new BstNode(10);
-tree.insert(3);
 tree.insert(6);
-tree.insert(9);
-tree.insert(12);
 tree.insert(15);
-tree.insert(18);
-tree.insert(21);
+tree.insert(3);
 tree.insert(8);
-tree.insert(16);
-tree.insert(24);
-
-//Tree Traversal
+tree.insert(20);
 
 
