@@ -5,25 +5,34 @@ const submit = document.querySelector('#submit');
 const question = document.querySelector('.card-title');
 const answer = document.querySelector('.card-text');
 
-question.innerText = `Exercise: Write a recursive function called nestedEvenSum. Return the sum of all even numbers in an object which may contain nested objects.`;
+question.innerText = `Exercise: Write a function that accepts a string and a substring, and counts the number of times the substring appears within the string and returns that number`;
 
-//Input: an array of strings
-//Output: an array of strings
+//Input: a string and a substring
+//Output: a number
 
-function exercise(obj, num = 0) {
-    for (let key in obj) {
-        if (typeof obj[key] === 'object') num += exercise(obj[key]);
-        else if (typeof obj[key] === 'number' && obj[key] % 2 === 0) num += obj[key];
+function exercise(str, subStr) {
+    let count = 0;
+    let altCount = 0;
+    for (let i = 0; i < str.length; i++) {
+        if (str[i] === subStr[0]) {
+            for (let j = 0; j < subStr.length; j++) {
+                if (str[i + j] === subStr[j]) altCount++;
+                if (altCount === subStr.length) count++;
+            }
+            altCount = 0;
+        }
     }
-    return num;
+    return count;
 }
-
-
 
 submit.addEventListener('click', (e) => {
     e.preventDefault();
     answer.innerText = `Output: ${exercise(input1.value, input2.value)}`
 })
+
+
+
+
 
 
 
@@ -296,9 +305,7 @@ function isSubsequence(str1, str2) {
 }
 
 function altIsSubsequent(str1, str2) {
-    if (str2.length < str1.length) {
-        return false;
-    }
+    if (str2.length < str1.length) return false;
     let counter = 0;
     let indexAt = 0;
     for (let i = 0; i < str2.length; i++) {
@@ -563,18 +570,18 @@ function fib(num) {
 //Coding Exercise 15
 //Write a recursive function called reverse which accepts a string and returns a new string in reverse.
 
-function reverse(str) {
-    const reversed = [];
-    function helper(helperInput) {
-        if (helperInput.length === 0) {
-            return;
-        }
-        reversed.unshift(helperInput[0]);
-        helper(helperInput.slice(1));
-    }
-    helper(str);
-    return reversed.join("");
-}
+// function reverse(str) {
+//     const reversed = [];
+//     function helper(helperInput) {
+//         if (helperInput.length === 0) {
+//             return;
+//         }
+//         reversed.unshift(helperInput[0]);
+//         helper(helperInput.slice(1));
+//     }
+//     helper(str);
+//     return reversed.join("");
+// }
 
 //Reverse function with no helper
 function noHelperReverse(str, arr = []) {
@@ -658,11 +665,18 @@ function altFlatten(arrOfArrs) {
     let arr = [];
     let flatArr = arrOfArrs.concat.apply([], arrOfArrs);
     for (let i = 0; i < arrOfArrs.length; i++) {
-        if (Array.isArray(arrOfArrs[i])) {
-            return altFlatten(flatArr);
-        } else {
-            arr.push(arrOfArrs[i]);
-        }
+        if (Array.isArray(arrOfArrs[i])) return altFlatten(flatArr);
+        else arr.push(arrOfArrs[i]);
+    }
+    return arr;
+}
+
+function alternateFlatten(arrOfArrs) {
+    let arr = [];
+    let flatArr = [].concat(...arrOfArrs);
+    for (let i = 0; i < arrOfArrs.length; i++) {
+        if (Array.isArray(arrOfArrs[i])) return altFlatten(flatArr);
+        else arr.push(arrOfArrs[i]);
     }
     return arr;
 }
@@ -763,6 +777,14 @@ function capitalizeWords() {
     return capsArr;
 }
 
+function noHelpCapitalizeWords(arr, capArr = []) {
+    let cappedWord = arr[0].charAt(0).toUpperCase() + arr[0].slice(1);
+    capArr.push(cappedWord);
+    arr.shift();
+    if (arr.length) return noHelpCapitalizeWords(arr, capArr);
+    else return capArr;
+}
+
 //Coding Exercise 22
 // Write a function called stringifyNumbers which takes in an object and finds all of the values which are numbers and converts them to strings. Recursion would be a great way to solve this!
 
@@ -814,6 +836,18 @@ function collectStrings(obj) {
     return arr;
 }
 
+function noHelpCollectStrings(obj, arr = []) {
+    for (let key in obj) {
+        if (typeof obj[key] === 'string') {
+            arr.push(obj[key]);
+        }
+        if (typeof obj[key] === 'object') {
+            noHelpCollectStrings(obj[key], arr);
+        }
+    }
+    return arr;
+}
+
 const obj4 = {
     stuff: "foo",
     data: {
@@ -845,6 +879,15 @@ function linearSearch(arr, val) {
     return -1;
 }
 
+function forInLinearSearch(arr, val) {
+    for (let value in arr) {
+        if (arr[value] === val) {
+            return parseInt(value);
+        }
+    }
+    return -1;
+}
+
 //Exercise 25
 // Write a function called binarySearch which accepts a sorted array and a value and returns the index at which the value exists. Otherwise, return -1.
 
@@ -855,16 +898,19 @@ function binarySearch(arr, val) {
     let left = 0;
     let right = arr.length - 1;
     let middle = Math.floor(arr.length / 2);
-    if (middle !== val) {
-        if (val < middle) {
-            right = middle - 1;
-            middle = Math.floor(right / 2);
+    if (arr[left] === val) return left;
+    if (arr[middle] === val) return middle;
+    if (arr[right] === val) return right;
+    while (middle !== left && middle !== right && val > arr[left] && val < arr[right]) {
+        if (arr[middle] > val) {
+            right = middle;
+            middle = Math.floor((left + right) / 2);
         }
-        else {
-            left = middle + 1;
-            middle = Math.floor(left * 1.5);
+        if (arr[middle] < val) {
+            left = middle;
+            middle = Math.floor((left + right) / 2);
         }
-        return arr.indexOf(val);
+        if (arr[middle] === val) return middle;
     }
     return -1;
 }
@@ -908,9 +954,7 @@ function bubbleSort(arr) {
         noSwaps = true;
         for (let j = 0; j < i - 1; j++) {
             if (arr[j] > arr[j + 1]) {
-                let temp = arr[j];
-                arr[j] = arr[j + 1];
-                arr[j + 1] = temp;
+                [arr[j + 1], arr[j]] = [arr[j], arr[j + 1]]
                 noSwaps = false;
             }
         }
@@ -942,11 +986,9 @@ function altSelectSort(arr) {
     for (let i = 0; i < arr.length; i++) {
         let min = i;
         for (let j = i + 1; j < arr.length; j++) {
-            if (arr[j] < arr[min]) {
-                min = j;
-            }
+            if (arr[j] < arr[min]) min = j;
         }
-        if (min !== i) swap(arr, i, min)
+        if (min !== i) [arr[i], arr[min]] = [arr[min], arr[i]];
     }
     return arr;
 }
@@ -1062,6 +1104,10 @@ function merge(arr1, arr2) {
 }
 
 
+
+
+
+
 //Merge Function Pseudocode
 
 // function notMergeSort(arr) {
@@ -1138,18 +1184,15 @@ function quickSort(array, left = 0, right = array.length - 1) {
         quickSort(array, swapIdx + 1, right);
     }
     function pivot(arr, start = 0, end = arr.length - 1) {
-        const swap = (array, idx1, idx2) => {
-            [array[idx1], array[idx2]] = [array[idx2], array[idx1]];
-        }
         let piv = arr[start];
         let swapIndex = start;
         for (let i = start; i <= end; i++) {
             if (piv > arr[i]) {
                 swapIndex++;
-                swap(arr, swapIndex, i);
+                [arr[swapIndex], arr[i]] = [arr[i], arr[swapIndex]];
             }
         }
-        swap(arr, start, swapIndex);
+        [arr[start], arr[swapIndex]] = [arr[swapIndex], arr[start]];
         return swapIndex;
     }
     return array;
@@ -1189,3 +1232,6 @@ function radixSort(nums) {
     }
     return nums;
 }
+
+
+

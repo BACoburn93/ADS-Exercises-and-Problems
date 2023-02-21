@@ -8,7 +8,7 @@ function memFib(n, memo = []) { //We store the answers we find into memo as we g
     return res; //Then, we return memo[n];
 }
 
-//Fibonacci Recursiv Solution w/ Tabulation
+//Fibonacci Recursive Solution w/ Tabulation
 
 function tabFib(n) {
     if (n <= 2) return 1;
